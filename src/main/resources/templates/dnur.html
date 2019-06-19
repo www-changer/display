@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>dnur</title>
+
+    <!-- 引入 ECharts 文件 -->
+    <script src="echarts.min.js"></script>
+
+    <script src="jquery.js"></script>
+</head>
+<body>
+
+<!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+<div id="main"
+     style="width: 600px;height:400px;position: absolute; top:50%; left: 50%; margin-top: -200px;margin-left: -300px"></div>
+
+
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    var day = [];
+    var dnur = [];
+
+    // 指定图表的配置项和数据
+    option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                    color: '#999'
+                }
+            }
+        },
+        toolbox: {
+            feature: {
+                dataView: {show: true},
+                magicType: {show: true, type: ['line', 'bar']},
+                saveAsImage: {show: true}
+            }
+        },
+        legend: {
+            data: ['新增用户次日留存率']
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: day,
+                axisPointer: {
+                    type: 'shadow'
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                name: '百分比',
+                min: 0.1,
+                max: 0.5,
+                interval: 0.05,
+                axisLabel: {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series: [
+            {
+                name: '新增用户次日留存率',
+                type: 'bar',
+                data: dnur
+            }
+        ]
+    };
+
+    $.ajax({
+        url: "/getDNUR",
+        type: "post",
+        async: false,
+        dataType: "json",
+        success: function (res) {
+
+            for (var i in res) {
+                day.push(res[i].day)
+                dnur.push(res[i].retainedRate);
+            }
+
+            myChart.setOption(option);
+        }
+    });
+
+
+</script>
+</body>
+</html>

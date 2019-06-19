@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <properties resource="application.yml"/>
+
+    <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <!--这里修改成统一的Mapper父接口-->
+            <property name="mappers" value="com.example.display.util.ParentMapper"/>
+        </plugin>
+
+        <!--这里填写自己的数据库链接-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/xwl?characterEncoding=utf8"
+                        userId="root"
+                        password="pass">
+        </jdbcConnection>
+
+        <!--这里填写生成的表实体类目录-->
+        <javaModelGenerator targetPackage="com.example.display.model" targetProject="src/main/java"/>
+
+        <!--这里填写生成的表xml目录-->
+        <sqlMapGenerator targetPackage="mapping" targetProject="src/main/resources"/>
+
+        <!--这里填写生成的表mapper目录-->
+        <javaClientGenerator targetPackage="com.example.display.mapper" targetProject="src/main/java" type="XMLMAPPER"/>
+
+        <!--这里的%通配符表示库里面的所有表-->
+        <!--<table tableName="%"></table>-->
+        <table tableName="daily_active_user"></table>
+        <table tableName="daily_retained_user_rate"></table>
+    </context></generatorConfiguration>

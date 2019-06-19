@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>dau</title>
+
+    <!-- 引入 ECharts 文件 -->
+    <script src="echarts.min.js"></script>
+
+    <script src="jquery.js"></script>
+</head>
+<body>
+
+<!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+<div id="main"
+     style="width: 600px;height:400px;position: absolute; top:50%; left: 50%; margin-top: -200px;margin-left: -300px"></div>
+
+
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    var day = [];
+    var dau = [];
+
+    // 指定图表的配置项和数据
+    option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                    color: '#999'
+                }
+            }
+        },
+        toolbox: {
+            feature: {
+                dataView: {show: true},
+                magicType: {show: true, type: ['line', 'bar']},
+                saveAsImage: {show: true}
+            }
+        },
+        legend: {
+            data: ['日活跃用户数量']
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: day,
+                axisPointer: {
+                    type: 'shadow'
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                name: '数量',
+                min: 30000,
+                max: 80000,
+                interval: 5000,
+                axisLabel: {
+                    formatter: '{value}'
+                }
+            }
+        ],
+        series: [
+            {
+                name: '日活跃用户数量',
+                type: 'bar',
+                data: dau
+            }
+        ]
+    };
+
+    $.ajax({
+        url: "/getDAU",
+        type: "post",
+        async: false,
+        dataType: "json",
+        success: function (res) {
+            for (var i in res) {
+                day.push(res[i].day);
+                dau.push(res[i].activeUser);
+            }
+            myChart.setOption(option);
+        }
+    });
+
+
+</script>
+</body>
+</html>
